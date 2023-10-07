@@ -1,0 +1,33 @@
+---
+- name: Ensure Community Repo is in sync (Multi Hub)
+  hosts: all
+  gather_facts: no
+  tasks:
+  - include_vars: ../vars/ahub.yml
+
+  - name: Copy the community requirements yml to remote PAH
+    ansible.builtin.copy:
+      src: ../files/requirements.yml
+      dest: /tmp/requirements.yml
+      owner: pulp
+      group: pulp
+      mode: '0644'
+
+  - name: Ensure consistancy for Multi Hub in community repo
+    infra.ah_configuration.ah_repository:
+      name: community
+      url: https://galaxy.ansible.com/api/
+      requirements_file: /tmp/requirements.yml
+      validate_certs: false
+      ah_username: "{{ ah_username }}"
+      ah_password: "{{ ah_password }}"
+
+  - name: Sync community repo and wait up to 60 seconds
+    infra.ah_configuration.ah_repository_sync:
+      name: community
+      wait: true
+      timeout: 300
+      validate_certs: false
+      ah_username: "{{ ah_username }}"
+      ah_password: "{{ ah_password }}"
+

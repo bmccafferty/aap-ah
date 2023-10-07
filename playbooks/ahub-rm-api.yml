@@ -1,0 +1,25 @@
+---
+- name: Remove Collection (Multi Hub)
+  hosts: all
+  gather_facts: no
+  tasks:
+  - include_vars: ../vars/ahub.yml
+
+  - name: Remove Single Collection from PAH via API
+    block:
+
+      - name: Call URI to remove 
+        ansible.builtin.uri:
+          url: "https://localhost/api/galaxy/v3/plugin/ansible/content/{{ repo }}/collections/index/{{ namespace }}/{{ collection  }}/"
+          method: DELETE
+          validate_certs: false
+          user: "{{ ah_username }}"
+          password: "{{ ah_password }}"
+          force_basic_auth: true
+          status_code: [200, 201, 202]
+
+    rescue:
+    
+      - name: Error removing (likely already removed/did not exist)
+        ansible.builtin.debug:
+          msg: "Failed to remove collection, Please check it actually existed"

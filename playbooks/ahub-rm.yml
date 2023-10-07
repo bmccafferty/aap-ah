@@ -1,0 +1,17 @@
+---
+- name: Remove Collection (Multi Hub)
+  hosts: all
+  gather_facts: no
+  tasks:
+  - include_vars: ../vars/ahub.yml
+
+  - name: Remove Single Collection from PAH
+    infra.ah_configuration.ah_collection:
+      namespace: ansible
+      name: posix
+      wait: true
+      state: absent
+      validate_certs: false
+      ah_username: "{{ ah_username }}"
+      ah_password: "{{ ah_password }}"
+

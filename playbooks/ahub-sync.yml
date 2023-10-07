@@ -1,0 +1,16 @@
+---
+- name: Sync AHub (Multi Hub)
+  hosts: all
+  gather_facts: no
+  tasks:
+  - include_vars: ../vars/ahub.yml
+
+  - name: Sync community repo and wait up to 60 seconds
+    infra.ah_configuration.ah_repository_sync:
+      name: community
+      wait: true
+      timeout: 300
+      validate_certs: false
+      ah_username: "{{ ah_username }}"
+      ah_password: "{{ ah_password }}"
+
