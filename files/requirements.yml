@@ -2,3 +2,4 @@ collections:
   - name: infra.controller_configuration
   - name: ansible.posix
   - name: community.libvirt
+  - name: willtome.tower_configuration
